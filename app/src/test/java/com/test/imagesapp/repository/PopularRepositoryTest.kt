@@ -68,11 +68,17 @@ class PopularRepositoryTest {
             val resultData = (item as ResultOf.Success).data
             val firstItem = resultData.first()
 
-            assertEquals(resultData, finalData)
+            dataRepository.fetchSizes(item.data.first().id).test(Duration.ZERO) {
+                val sizesItem = expectItem()
+                firstItem.sizes = (sizesItem as ResultOf.Success).data
+                assertEquals(resultData, finalData)
+            }
+
+            assertEquals(resultData, mockData)
             assertEquals(firstItem.title, mockData.first().title)
 
             assertThat(firstItem.sizes, hasItem(mockSizes.first()))
-            assertThat(firstItem.sizes.size, not(`is`(0)))
+            assertThat(firstItem.sizes?.size, not(`is`(0)))
 
             expectComplete()
         }

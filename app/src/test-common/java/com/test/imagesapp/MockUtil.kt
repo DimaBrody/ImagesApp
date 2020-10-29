@@ -9,9 +9,9 @@ object MockUtil {
 
     fun createListWithoutSizes() = listOf(createPhotoWithoutSizes())
 
-    fun createPhoto() = Photo("1", "Brody",  createSizes())
+    fun createPhoto() = Photo("1", "Brody", "url", createSizes())
 
-    fun createPhotoWithoutSizes() = Photo("1", "Brody", emptyList())
+    fun createPhotoWithoutSizes() = Photo("1", "Brody", "url" , emptyList())
 
     fun createSizes() = listOf(Size("Square",320, 240, "https://sdf"))
 

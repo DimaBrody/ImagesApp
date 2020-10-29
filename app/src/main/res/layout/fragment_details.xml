@@ -20,6 +20,10 @@
             name="onBackClickListener"
             type="android.view.View.OnClickListener" />
 
+        <variable
+            name="onSavedChangeListener"
+            type="com.test.imagesapp.functions.interfaces.OnSavedChanged" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -44,6 +48,7 @@
             tools:src="@drawable/ic_favorites_outline"
             app:tint="@color/white"
             app:saved="@{viewModel.isFavorite()}"
+            app:listener="@{onSavedChangeListener}"
             android:onClick="@{onClickListener}"
             android:padding="16dp"
             android:layout_height="56dp"/>
@@ -56,6 +61,7 @@
             app:picasso="@{viewModel.picasso}"
             app:photo="@{photo}"
             app:isDetails="@{true}"
+            app:sizes="@{viewModel.photoSizesLiveData}"
             android:layout_height="match_parent"/>
 
         <TextView

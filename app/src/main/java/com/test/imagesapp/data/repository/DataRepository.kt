@@ -1,5 +1,6 @@
 package com.test.imagesapp.data.repository
 
+import android.util.Log
 import com.test.imagesapp.data.database.dao.FavoritesDao
 import com.test.imagesapp.data.model.Photo
 import com.test.imagesapp.functions.parallelMap
@@ -21,27 +22,22 @@ class DataRepository @Inject constructor(
 
     suspend fun handleFavorite(photo: Photo) = favoritesDao.handlePhoto(photo)
 
+    suspend fun updateFavorite(photo: Photo) = favoritesDao.updatePhoto(photo)
+
+    suspend fun getFavorite(id: String) = favoritesDao.getPhoto(id)
+
     suspend fun fetchPhotos() = flow {
         val result = photosClient.fetchPhotos()
 
-        if (result is ResultOf.Success) {
-            val windowedData = result.data.windowed(20, 20, true)
-
-            windowedData.forEach {
-                emit(result.copy(data = it.parallelMap(::fetchSizeWithId)))
-            }
-        } else emit(result)
+        emit(result)
     }.flowOn(Dispatchers.IO)
 
+    suspend fun fetchSizes(id: String) = flow {
+        val result = photosClient.fetchSizes(id)
 
-    private suspend fun fetchSizeWithId(photo: Photo): Photo {
-        val sizeResult = photosClient.fetchSizes(photo.id)
+        emit(result)
+    }.flowOn(Dispatchers.IO)
 
-        if (sizeResult is ResultOf.Success)
-            photo.sizes = sizeResult.data
-
-        return photo
-    }
 
 
 }

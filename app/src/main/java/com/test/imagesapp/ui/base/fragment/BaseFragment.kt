@@ -1,4 +1,4 @@
-package com.test.imagesapp.ui.base
+package com.test.imagesapp.ui.base.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater

@@ -1,5 +1,6 @@
 package com.test.imagesapp.ui.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,8 +12,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import com.test.imagesapp.R
 import com.test.imagesapp.data.model.Photo
+import com.test.imagesapp.data.model.sizes.Size
+import com.test.imagesapp.data.model.sizes.SizesParcelableData
 import com.test.imagesapp.databinding.ItemImageBinding
-import com.test.imagesapp.ui.base.BaseFragment
+import com.test.imagesapp.ui.base.fragment.BaseFragment
 import com.test.imagesapp.ui.fragments.favorites.FavoritesFragmentDirections
 import com.test.imagesapp.ui.fragments.popular.PopularFragmentDirections
 import javax.inject.Inject
@@ -21,8 +24,6 @@ class ImagesAdapter @Inject constructor(
     private val picasso: Picasso,
     private var items: List<Photo> = listOf()
 ) : RecyclerView.Adapter<ImagesAdapter.ImagesViewHolder>() {
-
-    private val TAG = this::class.java.simpleName
 
     var fragmentType: Int = -1
 
@@ -43,9 +44,15 @@ class ImagesAdapter @Inject constructor(
         }
     }
 
-    fun setNewFavorite(photoId: String) {
-        items.find { it.id == photoId }?.let {
-            it.isSaved = !it.isSaved
+    fun setNewFavorite(photo: Photo) {
+        items.find { it.id == photo.id }?.let {
+            it.isSaved = photo.isSaved
+        }
+    }
+
+    fun setSizesForPhoto(data: SizesParcelableData){
+        items.find { it.id == data.photoId }?.let {
+            it.sizes = data.items
         }
     }
 

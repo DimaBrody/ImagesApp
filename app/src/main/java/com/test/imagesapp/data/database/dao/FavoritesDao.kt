@@ -14,15 +14,20 @@ abstract class FavoritesDao {
     @Delete
     abstract suspend fun deletePhoto(photo: Photo)
 
+    @Update
+    abstract suspend fun updatePhoto(photo: Photo)
+
     @Query("select * from photo_table where id = :id")
     abstract suspend fun getPhoto(id: String): Photo?
 
     @Transaction
     open suspend fun handlePhoto(photo: Photo): Boolean {
         return if (getPhoto(photo.id) != null) {
+            photo.isSaved = false
             deletePhoto(photo)
             false
         } else {
+            photo.isSaved = true
             insertPhoto(photo)
             true
         }

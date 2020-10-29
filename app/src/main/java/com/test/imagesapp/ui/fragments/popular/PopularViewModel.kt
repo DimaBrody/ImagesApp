@@ -7,13 +7,14 @@ import com.test.imagesapp.data.model.Photo
 import com.test.imagesapp.data.repository.DataRepository
 import com.test.imagesapp.functions.createCoroutineHandler
 import com.test.imagesapp.network.result.ResultOf
+import com.test.imagesapp.ui.base.viewmodel.CoroutineViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class PopularViewModel @ViewModelInject constructor(
     private val repository: DataRepository
-) : ViewModel() {
+) : CoroutineViewModel() {
 
     val isLoading = ObservableBoolean()
 
@@ -26,7 +27,7 @@ class PopularViewModel @ViewModelInject constructor(
     init {
         isLoading.set(true)
 
-        viewModelScope.launch(createCoroutineHandler {
+        launchSafely(onError = {
             toastFailedLiveData.value = it
             isLoading.set(false)
         }) {
@@ -45,9 +46,9 @@ class PopularViewModel @ViewModelInject constructor(
 
     private suspend fun getPhotos() {
         repository.fetchPhotos().collect { result ->
-            val value = when(result){
-                is ResultOf.Success->result.data
-                is ResultOf.Failure->{
+            val value = when (result) {
+                is ResultOf.Success -> result.data
+                is ResultOf.Failure -> {
                     toastFailedLiveData.value = result.throwable
                     emptyList()
                 }
